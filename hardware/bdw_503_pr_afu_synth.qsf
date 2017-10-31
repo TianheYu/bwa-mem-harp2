@@ -1,0 +1,186 @@
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO"
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING"
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST ON -section_id eda_simulation
+
+set_global_assignment -name TOP_LEVEL_ENTITY green_top
+set_instance_assignment -name PARTITION root_partition -to |
+
+#---------------------------------------------------------------------------#
+#                       Synthesis Options                                   #
+#---------------------------------------------------------------------------#
+
+set_global_assignment -name FAMILY "Arria 10"
+set_global_assignment -name DEVICE 10AX115U3F45E2SGE3
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
+set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 1932
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 2
+set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2005
+set_global_assignment -name VERILOG_SHOW_LMF_MAPPING_MESSAGES OFF
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
+
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name AUTO_RESERVE_CLKUSR_FOR_CALIBRATION OFF
+set_global_assignment -name SEED 0
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
+set_global_assignment -name ADD_PASS_THROUGH_LOGIC_TO_INFERRED_RAMS OFF
+set_global_assignment -name USE_HIGH_SPEED_ADDER ON
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
+set_global_assignment -name OPTIMIZE_HOLD_TIMING "ALL PATHS"
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
+set_global_assignment -name ROUTER_TIMING_OPTIMIZATION_LEVEL MAXIMUM
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+set_global_assignment -name ROUTER_LCELL_INSERTION_AND_LOGIC_DUPLICATION ON
+set_global_assignment -name QII_AUTO_PACKED_REGISTERS NORMAL
+set_global_assignment -name MUX_RESTRUCTURE ON
+set_global_assignment -name ADV_NETLIST_OPT_SYNTH_WYSIWYG_REMAP ON
+set_global_assignment -name OPTIMIZATION_MODE "HIGH PERFORMANCE EFFORT"
+set_global_assignment -name INI_VARS "hdd_disable_top_hub=on"
+
+# Enable Scrubbing. Set Divider to 2 when using D1 Device
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name USE_CONFIGURATION_DEVICE ON
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name INTERNAL_SCRUBBING ON
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_global_assignment -name ACTIVE_SERIAL_CLOCK FREQ_100MHZ
+
+# Green Region Mandatory RTL files
+# ================================
+set_global_assignment -name SYSTEMVERILOG_FILE ../lib/green/ccip_if_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../lib/green/green_top.sv
+set_global_assignment -name MISC_FILE ../lib/green/AFU_debug/SCJIO.qsys
+set_global_assignment -name QSYS_FILE ../lib/green/AFU_debug/SCJIO.qsys
+
+# ==============================================================================================================================
+# DO NOT MODIFY the contents above this
+# ==============================================================================================================================
+
+
+# AFU  section - User AFU RTL goes here
+# =============================================
+
+# nlb is a sample AFU
+# ===================
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/harp2singlepetst/nlb_400/include_files/common/
+
+set_global_assignment -name SYSTEMVERILOG_FILE ../lib/green/ccip_debug.sv
+
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/harp2singlepetst/hardware/afu_core.v
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/harp2singlepetst/hardware/afu_io.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/harp2singlepetst/hardware/afu_top.sv
+
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/harp2singlepetst/hardware/ccip_std_afu_200mhz.sv
+
+# Sample ccip_debug signalTap Section
+# ===================================
+#set_global_assignment -name ENABLE_SIGNALTAP ON
+#set_global_assignment -name USE_SIGNALTAP_FILE ccip_debug.stp
+#set_global_assignment -name SIGNALTAP_FILE ccip_debug.stp
+set_global_assignment -name LAST_QUARTUS_VERSION 16.0.0
+
+# Add ccip_async_shim
+# ===================
+
+set_global_assignment -name SYSTEMVERILOG_FILE  /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_ccip_async/hw/rtl/ccip_async_shim.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_ccip_async/hw/rtl/ccip_afifo_channel.sv
+
+set_global_assignment -name SDC_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_ccip_async/hw/par/ccip_async.sdc
+
+#===============================================================================================================================================
+
+# Add MPF to the design
+#======================
+
+# define platform macro
+# =====================
+set_global_assignment -name VERILOG_MACRO "MPF_PLATFORM_BDX=1"
+
+# set CCI_MPF_SRC
+#set CCI_MPF_SRC "CCI_MPF_SRC"
+
+## MPF directories
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-if
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pwrite
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp
+set_global_assignment -name SEARCH_PATH /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro
+
+## Type and interface Packages and header files
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if/ccis_if_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if/ccis_if_funcs_pkg.sv
+#set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if/ccip_if_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if/ccip_if_funcs_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-if/cci_mpf_if_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if/cci_csr_if_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-if/ccip_feature_list_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci_mpf_csrs.h
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci_mpf_csrs_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pkg.sv
+
+## Primary MPF module that instantiates the desired shims
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci_mpf.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci_mpf_pipe_std.sv
+
+## Map CCI wires to MPF's primary interface
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-if/ccip_wires_to_mpf.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-if/ccis_wires_to_mpf.sv
+
+## Primitives used by MPF shims
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_arb_rr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo1.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo2.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo_bram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo_lutram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_filter_cam.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_filter_counting.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_filter_decode.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_heap.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_lfsr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_lutram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_onehot_to_bin.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_ram_dualport.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_ram_simple.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_repl_lru_pseudo.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_repl_random.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_rob.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_track_multi_write.sv
+
+## MPF shims -- the building blocks of constructed MPF instances
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_afu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_afu_epoch.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_afu_lockstep.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_fiu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_csr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_dedup_reads.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_detect_eop.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge/cci_mpf_shim_edge_afu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge/cci_mpf_shim_edge_fiu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_mux.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_null.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pwrite/cci_mpf_shim_pwrite.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_rsp_order.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vc_map.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_shim_vtp.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_svc_vtp.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_svc_vtp_pipe.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_svc_vtp_pt_walk.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_svc_vtp_tlb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro/cci_mpf_shim_wro.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro/cci_mpf_shim_wro_filter_group.sv
+set_global_assignment -name SYSTEMVERILOG_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro/cci_mpf_shim_wro_epoch_order.sv
+
+## Constraints
+set_global_assignment -name SDC_FILE /curr/theodoreyth/SR-5.0.3_BBB_11_2016/BBB_cci_mpf/hw/par/sdc_cci_mpf.sdc
+
+
