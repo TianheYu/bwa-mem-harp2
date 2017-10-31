@@ -1,4 +1,4 @@
-#**Project: SMEM Accelerator on Hardware Accelerator Research Program (HARPv2) platform**
+# **SMEM Accelerator on Hardware Accelerator Research Program (HARPv2) platform**
 
 
 
