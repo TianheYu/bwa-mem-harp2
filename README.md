@@ -5,6 +5,8 @@ Project: SMEM Accelerator on Hardware Accelerator Research Program (HARPv2) plat
 The project's goal is to accelerate the SMEM kernel on HARP system, this is the original code that is designed for HARPv2 platform. 
 Our code is based on Heng Li's bwa-mem project (https://github.com/lh3/bwa/releases/tag/0.7.8). Please refer to [1] for code design 
 details.
+
+
 2. Quick Startup
 One should first intall HARP2 system and follow the instructions to synthesis the hardware code or Do the simulation with VCS.
 To run the software, use the run.sh script:
